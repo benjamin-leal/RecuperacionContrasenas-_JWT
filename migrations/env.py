@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 # (lo necesita `alembic revision --autogenerate`).
 import app.pets.pets_models  # noqa: F401
 import app.students.students_models  # noqa: F401
+import app.users.password_reset_models  # noqa: F401
 import app.users.users_models  # noqa: F401
 from app.shared.config import DATABASE_URL
 from app.shared.database import Base
