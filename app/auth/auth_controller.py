@@ -2,9 +2,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from app.auth.auth_schemas import ForgotPasswordDto, LoginDto, RegisterDto, User
+from app.auth.auth_schemas import (
+    ForgotPasswordDto,
+    LoginDto,
+    RegisterDto,
+    ResetPasswordDto,
+    User,
+)
 from app.auth.auth_service import AuthServiceDep
-from app.auth.password_reset import request_reset
+from app.auth.password_reset import request_reset, reset_password
 from app.auth.session import (
     UNAUTHORIZED_MESSAGE,
     CurrentSession,
@@ -69,3 +75,9 @@ def me(session: CurrentSession, response: Response, db: DbSession) -> User:
 @router.post("/password/forgot")
 def forgot_password(body: ForgotPasswordDto, db: DbSession) -> dict[str, str]:
     return request_reset(db, body.email)
+
+
+@router.post("/password/reset", status_code=204)
+def complete_password_reset(body: ResetPasswordDto, db: DbSession) -> Response:
+    reset_password(db, body.reset_token, body.new_password)
+    return Response(status_code=204)

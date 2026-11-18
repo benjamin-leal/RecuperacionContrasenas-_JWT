@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 from app.shared.datetimes import ApiDatetime
 from app.shared.validation import validate_email, validate_text
@@ -117,3 +117,10 @@ class ForgotPasswordDto(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     email: EmailStr
+
+
+class ResetPasswordDto(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    reset_token: str
+    new_password: str = Field(min_length=8, max_length=72)

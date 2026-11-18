@@ -58,6 +58,9 @@ async def envelope_middleware(
     if not request.url.path.startswith("/api") or not 200 <= response.status_code < 400:
         return response
 
+    if response.status_code == 204:
+        return response
+
     body_bytes = getattr(response, "body", None)
     if body_bytes is None:
         body_bytes = b"".join([chunk async for chunk in response.body_iterator])
