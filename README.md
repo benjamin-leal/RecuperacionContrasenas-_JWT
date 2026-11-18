@@ -232,3 +232,22 @@ La aplicación queda disponible en:
 - `make format` — formatea el código con Ruff
 - `make format-check` — verifica el formato
 - `make clean` — elimina `.venv`, cachés y artefactos
+
+## Recuperación de contraseña con JWT
+
+Para la demostración local, copia `.env.example` a `.env` si todavía no existe.
+Genera una clave con `python3 -c "import secrets; print(secrets.token_hex(32))"`
+y guárdala como `RESET_JWT_SECRET` en `.env`. Activa `RESET_DEMO_ENABLED=true`
+solo en tu equipo. El enlace autoriza el cambio de contraseña y en este modo
+se entrega directamente a quien solicita la recuperación.
+
+1. Inicia la API y aplica las migraciones hasta `0002`.
+2. Desde `/docs`, registra un usuario y llama a `POST /api/auth/password/forgot`
+   con su correo en el campo `email`.
+3. Abre la ruta de `data.reset_link` en el mismo origen de la API. El enlace
+   vence a los 15 minutos. Ingresa la nueva contraseña en el formulario.
+4. El primer cambio correcto responde `204` y cierra las sesiones del usuario.
+   Reutilizar el enlace responde `401`. Inicia sesión con la contraseña nueva.
+
+Para ejecutar las pruebas con una base SQLite temporal, usa
+`uv run --group dev python -m unittest discover -s tests -v`.
