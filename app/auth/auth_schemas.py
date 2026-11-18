@@ -111,3 +111,9 @@ def _email_errors(v: object) -> list[str]:
 def _raise_validation(messages: list[str]) -> None:
     if messages:
         raise ValueError(", ".join(messages))
+
+
+class ForgotPasswordDto(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: EmailStr
